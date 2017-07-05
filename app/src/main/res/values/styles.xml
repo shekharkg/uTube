@@ -9,6 +9,7 @@
   </style>
 
   <style name="NoActionBar" parent="AppTheme">
+    <item name="android:windowBackground">@drawable/bg_splash</item>
     <item name="android:windowActionBar">false</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:windowTranslucentStatus">true</item>
