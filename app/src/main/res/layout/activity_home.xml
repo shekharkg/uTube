@@ -11,12 +11,18 @@
     android:layout_height="match_parent">
 
     <ImageView
-      android:scaleType="fitXY"
       android:id="@+id/bgDiagonalIV"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:contentDescription="@string/app_name"
+      android:scaleType="fitXY"
       android:src="@drawable/bg"/>
 
+    <com.google.android.youtube.player.YouTubePlayerView
+      android:layout_marginTop="@dimen/status_bar_height"
+      android:id="@+id/youtubePlayer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
 
   </RelativeLayout>
 </layout>
