@@ -24,6 +24,19 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/status_bar_height"/>
 
+    <TextView
+      android:id="@+id/videoTitleTV"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/youtubePlayerView"
+      android:layout_margin="@dimen/margin_16"/>
+
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/commentsRV"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/videoTitleTV"/>
+
 
     <android.support.design.widget.FloatingActionButton
       android:id="@+id/fab"
