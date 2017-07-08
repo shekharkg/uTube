@@ -19,6 +19,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.shekharkg.utube.databinding.ActivityHomeBinding;
 import com.shekharkg.utube.logger.Logger;
+import com.shekharkg.utube.storage.StorageHelper;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -31,12 +32,14 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   private ActivityHomeBinding homeBinding;
   private TextToSpeech tts;
   private YouTubePlayer youTubePlayer;
+  private StorageHelper storageHelper;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     homeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
+    storageHelper = StorageHelper.getStorageHelper(this);
     homeBinding.youtubePlayerView.initialize(getString(R.string.youtube_api_key), this);
     homeBinding.fab.setOnClickListener(this);
 
