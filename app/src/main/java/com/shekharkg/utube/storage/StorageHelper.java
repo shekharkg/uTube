@@ -6,11 +6,15 @@ package com.shekharkg.utube.storage;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.shekharkg.utube.bean.VideoItem;
 import com.shekharkg.utube.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by shekhar on 8/7/17.
@@ -70,5 +74,21 @@ public class StorageHelper extends SQLiteOpenHelper {
     contentValues.put(COL_COMMENT, videoItem.getComment());
     contentValues.put(COL_TIME, videoItem.getTimeInMillis());
     return sqLiteDatabase.insert(TBL_COMMENTS, null, contentValues);
+  }
+
+  public synchronized List<VideoItem> getComments(String videoId) {
+    List<VideoItem> videoItems = new ArrayList<>();
+
+    String[] columns = new String[]{COL_VIDEO_ID, COL_COMMENT, COL_TIME};
+
+    Cursor cursor = sqLiteDatabase.query(true, TBL_COMMENTS, columns, COL_VIDEO_ID + " =?",
+        new String[]{videoId}, null, null, null, null);
+
+    while (cursor.moveToNext()) {
+      videoItems.add(new VideoItem(cursor.getString(0), cursor.getString(1), cursor.getInt(2)));
+    }
+
+    cursor.close();
+    return videoItems;
   }
 }

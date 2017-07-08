@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.shekharkg.utube.adapter.CommentsAdapter;
+import com.shekharkg.utube.bean.VideoItem;
 import com.shekharkg.utube.databinding.ActivityHomeBinding;
 import com.shekharkg.utube.logger.Logger;
 import com.shekharkg.utube.storage.StorageHelper;
@@ -35,6 +37,7 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   private YouTubePlayer youTubePlayer;
   private StorageHelper storageHelper;
   private String videoId = "5u4G23_OohI";
+  private CommentsAdapter adapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     homeBinding.youtubePlayerView.initialize(getString(R.string.youtube_api_key), this);
     homeBinding.fab.setOnClickListener(this);
     tts = new TextToSpeech(this, this);
+    adapter = new CommentsAdapter(new ArrayList<VideoItem>());
   }
 
   @Override
@@ -120,17 +124,7 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   }
 
   private void recognition(String text) {
-    Logger.i(text + "");
-
-    int millis = youTubePlayer.getCurrentTimeMillis();
-
-    String time = String.format("%d:%d:%d",
-        TimeUnit.MILLISECONDS.toHours(millis),
-        TimeUnit.MILLISECONDS.toMinutes(millis),
-        TimeUnit.MILLISECONDS.toSeconds(millis) -
-            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-
-    Logger.wtf(time);
+    VideoItem item = new VideoItem(videoId, text, youTubePlayer.getCurrentTimeMillis());
   }
 
 
