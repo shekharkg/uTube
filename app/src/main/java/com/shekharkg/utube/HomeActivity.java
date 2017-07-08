@@ -23,6 +23,7 @@ import com.shekharkg.utube.storage.StorageHelper;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, View.OnClickListener, TextToSpeech.OnInitListener {
 
@@ -39,11 +40,13 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     homeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+    initVars();
+  }
 
+  private void initVars() {
     storageHelper = StorageHelper.getStorageHelper(this);
     homeBinding.youtubePlayerView.initialize(getString(R.string.youtube_api_key), this);
     homeBinding.fab.setOnClickListener(this);
-
     tts = new TextToSpeech(this, this);
   }
 
@@ -118,7 +121,16 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
   private void recognition(String text) {
     Logger.i(text + "");
-    Logger.wtf(youTubePlayer.getCurrentTimeMillis() + "");
+
+    int millis = youTubePlayer.getCurrentTimeMillis();
+
+    String time = String.format("%d:%d:%d",
+        TimeUnit.MILLISECONDS.toHours(millis),
+        TimeUnit.MILLISECONDS.toMinutes(millis),
+        TimeUnit.MILLISECONDS.toSeconds(millis) -
+            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+
+    Logger.wtf(time);
   }
 
 
