@@ -7,6 +7,7 @@ package com.shekharkg.utube;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -37,19 +38,25 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   private TextToSpeech tts;
   private YouTubePlayer youTubePlayer;
   private StorageHelper storageHelper;
-  private String videoId = "5u4G23_OohI";
   private final String defaultUrl = "https://www.youtube.com/watch?v=5u4G23_OohI";
   private CommentsAdapter adapter;
+  private String videoId = "";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     homeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
-    initViews();
     initVars();
   }
 
-  private void initViews() {
+  private void initVars() {
+    storageHelper = StorageHelper.getStorageHelper(this);
+    homeBinding.youtubePlayerView.initialize(getString(R.string.youtube_api_key), this);
+    homeBinding.fab.setOnClickListener(this);
+    tts = new TextToSpeech(this, this);
+
+    homeBinding.videoUrlET.setText(defaultUrl);
+    videoId = getParamVFromUrl("v");
     adapter = new CommentsAdapter(storageHelper.getComments(videoId));
     LinearLayoutManager layoutManager = new LinearLayoutManager(this);
     homeBinding.commentsRV.setLayoutManager(layoutManager);
@@ -58,11 +65,9 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   }
 
 
-  private void initVars() {
-    storageHelper = StorageHelper.getStorageHelper(this);
-    homeBinding.youtubePlayerView.initialize(getString(R.string.youtube_api_key), this);
-    homeBinding.fab.setOnClickListener(this);
-    tts = new TextToSpeech(this, this);
+  private String getParamVFromUrl(String param) {
+    Uri uri = Uri.parse(homeBinding.videoUrlET.getText().toString().trim());
+    return uri.getQueryParameter(param);
   }
 
   @Override
@@ -139,7 +144,6 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     storageHelper.insertComment(item);
     adapter.addVideoItem(item);
     adapter.notifyDataSetChanged();
-    Logger.wtf(item.getComment() + "->" + item.getVideoId());
   }
 
 
@@ -154,6 +158,6 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
   @Override
   public void onVideoItemClicked(int position, VideoItem videoItem) {
-    youTubePlayer.seekToMillis(videoItem.getTimeInMillis());
+    speak(videoItem.getComment(), videoItem.getTimeInMillis());
   }
 }

@@ -27,13 +27,13 @@
     <EditText
       android:id="@+id/videoUrlET"
       android:layout_width="match_parent"
-      android:layout_height="@dimen/heightUrlET"
+      android:layout_height="wrap_content"
       android:layout_below="@id/youtubePlayerView"
       android:layout_marginBottom="@dimen/margin_16"
       android:layout_marginTop="@dimen/margin_16"
       android:background="@android:color/white"
-      android:paddingEnd="@dimen/padding"
-      android:paddingStart="@dimen/padding"/>
+      android:minHeight="@dimen/heightUrlET"
+      android:padding="@dimen/padding"/>
 
     <android.support.v7.widget.RecyclerView
       android:id="@+id/commentsRV"

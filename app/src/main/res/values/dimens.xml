@@ -10,5 +10,5 @@
   <dimen name="margin_32">32dp</dimen>
   <dimen name="textCommentsSize">18sp</dimen>
   <dimen name="padding">8dp</dimen>
-  <dimen name="heightUrlET">40dp</dimen>
+  <dimen name="heightUrlET">60dp</dimen>
 </resources>
