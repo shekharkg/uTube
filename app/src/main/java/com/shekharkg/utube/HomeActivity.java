@@ -33,6 +33,7 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   private TextToSpeech tts;
   private YouTubePlayer youTubePlayer;
   private StorageHelper storageHelper;
+  private String videoId = "5u4G23_OohI";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
     this.youTubePlayer = youTubePlayer;
     if (!wasRestored)
-      youTubePlayer.cueVideo("5u4G23_OohI");
+      youTubePlayer.cueVideo(videoId);
   }
 
   @Override
