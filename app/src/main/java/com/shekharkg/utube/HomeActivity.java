@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,14 +21,14 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.shekharkg.utube.adapter.CommentsAdapter;
 import com.shekharkg.utube.bean.VideoItem;
 import com.shekharkg.utube.databinding.ActivityHomeBinding;
+import com.shekharkg.utube.interfaces.VideoItemClickedListener;
 import com.shekharkg.utube.logger.Logger;
 import com.shekharkg.utube.storage.StorageHelper;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
-public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, View.OnClickListener, TextToSpeech.OnInitListener {
+public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, View.OnClickListener, TextToSpeech.OnInitListener, VideoItemClickedListener {
 
   private final int REQUEST_CODE_YOU_TUBE = 1001;
   private final int REQUEST_CODE_TTS = 1002;
@@ -37,21 +38,31 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   private YouTubePlayer youTubePlayer;
   private StorageHelper storageHelper;
   private String videoId = "5u4G23_OohI";
+  private final String defaultUrl = "https://www.youtube.com/watch?v=5u4G23_OohI";
   private CommentsAdapter adapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     homeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+    initViews();
     initVars();
   }
+
+  private void initViews() {
+    adapter = new CommentsAdapter(storageHelper.getComments(videoId));
+    LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    homeBinding.commentsRV.setLayoutManager(layoutManager);
+    homeBinding.commentsRV.setAdapter(adapter);
+    adapter.setOnClickListener(this);
+  }
+
 
   private void initVars() {
     storageHelper = StorageHelper.getStorageHelper(this);
     homeBinding.youtubePlayerView.initialize(getString(R.string.youtube_api_key), this);
     homeBinding.fab.setOnClickListener(this);
     tts = new TextToSpeech(this, this);
-    adapter = new CommentsAdapter(new ArrayList<VideoItem>());
   }
 
   @Override
@@ -125,6 +136,10 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
   private void recognition(String text) {
     VideoItem item = new VideoItem(videoId, text, youTubePlayer.getCurrentTimeMillis());
+    storageHelper.insertComment(item);
+    adapter.addVideoItem(item);
+    adapter.notifyDataSetChanged();
+    Logger.wtf(item.getComment() + "->" + item.getVideoId());
   }
 
 
@@ -135,5 +150,10 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
       tts.shutdown();
     }
     super.onDestroy();
+  }
+
+  @Override
+  public void onVideoItemClicked(int position, VideoItem videoItem) {
+    youTubePlayer.seekToMillis(videoItem.getTimeInMillis());
   }
 }

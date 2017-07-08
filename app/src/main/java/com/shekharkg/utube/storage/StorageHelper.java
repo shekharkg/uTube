@@ -68,7 +68,7 @@ public class StorageHelper extends SQLiteOpenHelper {
     onCreate(sqLiteDatabase);
   }
 
-  public synchronized long insertQuery(VideoItem videoItem) {
+  public synchronized long insertComment(VideoItem videoItem) {
     ContentValues contentValues = new ContentValues();
     contentValues.put(COL_VIDEO_ID, videoItem.getVideoId());
     contentValues.put(COL_COMMENT, videoItem.getComment());

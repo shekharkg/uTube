@@ -24,18 +24,23 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/status_bar_height"/>
 
-    <TextView
-      android:id="@+id/videoTitleTV"
+    <EditText
+      android:id="@+id/videoUrlET"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="@dimen/heightUrlET"
       android:layout_below="@id/youtubePlayerView"
-      android:layout_margin="@dimen/margin_16"/>
+      android:layout_marginBottom="@dimen/margin_16"
+      android:layout_marginTop="@dimen/margin_16"
+      android:background="@android:color/white"
+      android:paddingEnd="@dimen/padding"
+      android:paddingStart="@dimen/padding"/>
 
     <android.support.v7.widget.RecyclerView
       android:id="@+id/commentsRV"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@id/videoTitleTV"/>
+      android:layout_below="@id/videoUrlET"
+      android:background="@android:color/white"/>
 
 
     <android.support.design.widget.FloatingActionButton
