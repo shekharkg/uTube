@@ -5,7 +5,11 @@
 package com.shekharkg.utube.activity;
 
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.net.Uri;
@@ -13,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,6 +52,8 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   private CommentsAdapter adapter;
   private String videoId = "";
 
+  private AlertDialog alertDialog;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -60,6 +67,8 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     homeBinding.fab.setOnClickListener(this);
     tts = new TextToSpeech(this, this);
 
+    setupAlert();
+
     homeBinding.videoUrlET.setText(defaultUrl);
     videoId = getParamVFromUrl("v");
     adapter = new CommentsAdapter(storageHelper.getComments(videoId));
@@ -71,6 +80,18 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
     homeBinding.videoUrlET.addTextChangedListener(urlTextWatcher);
     homeBinding.videoUrlET.setOnTouchListener(etDrawableTouchListener);
+  }
+
+  private void setupAlert() {
+    alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle("Oops!!!");
+    alertDialog.setMessage("NO INTERNET CONNECTION FOUND.");
+    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+          }
+        });
   }
 
 
@@ -162,6 +183,29 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     adapter.notifyDataSetChanged();
   }
 
+  @Override
+  protected void onStart() {
+    super.onStart();
+
+    registerReceiver(networkBroadcastReceiver, new IntentFilter("NetworkConnectionBroadcast"));
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+
+    unregisterReceiver(networkBroadcastReceiver);
+  }
+
+  private BroadcastReceiver networkBroadcastReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (!intent.getBooleanExtra("internet", true))
+        alertDialog.show();
+      else
+        alertDialog.dismiss();
+    }
+  };
 
   @Override
   public void onDestroy() {
