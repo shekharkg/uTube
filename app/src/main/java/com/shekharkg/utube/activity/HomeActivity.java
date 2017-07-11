@@ -2,23 +2,27 @@
  * Copyright (c)  2017 Shekhar Gupta. - All Rights Reserved
  */
 
-package com.shekharkg.utube;
+package com.shekharkg.utube.activity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.shekharkg.utube.R;
 import com.shekharkg.utube.adapter.CommentsAdapter;
 import com.shekharkg.utube.bean.VideoItem;
 import com.shekharkg.utube.databinding.ActivityHomeBinding;
@@ -62,12 +66,15 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     homeBinding.commentsRV.setLayoutManager(layoutManager);
     homeBinding.commentsRV.setAdapter(adapter);
     adapter.setOnClickListener(this);
+    homeBinding.actionPlay.setOnClickListener(this);
+
+    homeBinding.videoUrlET.addTextChangedListener(urlTextWatcher);
   }
 
 
   private String getParamVFromUrl(String param) {
     Uri uri = Uri.parse(homeBinding.videoUrlET.getText().toString().trim());
-    return uri.getQueryParameter(param);
+    return uri.getQueryParameter(param) == null ? "" : uri.getQueryParameter(param);
   }
 
   @Override
@@ -89,6 +96,13 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   public void onClick(View view) {
     if (view == homeBinding.fab)
       listen();
+    else if (view == homeBinding.actionPlay) {
+      videoId = getParamVFromUrl("v");
+      if (youTubePlayer != null)
+        youTubePlayer.cueVideo(videoId);
+      adapter.updateList(storageHelper.getComments(videoId));
+      adapter.notifyDataSetChanged();
+    }
   }
 
   @Override
@@ -160,4 +174,28 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
   public void onVideoItemClicked(int position, VideoItem videoItem) {
     speak(videoItem.getComment(), videoItem.getTimeInMillis());
   }
+
+  private TextWatcher urlTextWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+      String url = homeBinding.videoUrlET.getText().toString();
+      if (url.isEmpty()) {
+        homeBinding.actionPlay.setColorFilter(Color.LTGRAY);
+        homeBinding.actionPlay.setClickable(false);
+      } else {
+        homeBinding.actionPlay.setColorFilter(getResources().getColor(R.color.colorAccent));
+        homeBinding.actionPlay.setClickable(true);
+      }
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+  };
 }

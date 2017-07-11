@@ -20,11 +20,14 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements View.
   public CommentItemBinding commentItemBinding;
   private GetPositionListener listener;
 
-  public CommentsViewHolder(View itemView, GetPositionListener listener) {
+  public CommentsViewHolder(View itemView) {
     super(itemView);
     commentItemBinding = DataBindingUtil.bind(itemView);
-    this.listener = listener;
     commentItemBinding.getRoot().setOnClickListener(this);
+  }
+
+  public void setListener(GetPositionListener listener) {
+    this.listener = listener;
   }
 
   @Override

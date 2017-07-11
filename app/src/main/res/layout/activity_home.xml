@@ -24,22 +24,47 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/status_bar_height"/>
 
-    <EditText
-      android:id="@+id/videoUrlET"
+    <RelativeLayout
+      android:id="@+id/urlRL"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/youtubePlayerView"
       android:layout_marginBottom="@dimen/margin_16"
       android:layout_marginTop="@dimen/margin_16"
       android:background="@android:color/white"
-      android:minHeight="@dimen/heightUrlET"
-      android:padding="@dimen/padding"/>
+      android:orientation="horizontal"
+      android:paddingEnd="@dimen/padding"
+      android:paddingStart="@dimen/padding">
+
+      <EditText
+        android:id="@+id/videoUrlET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/actionPlay"
+        android:minHeight="@dimen/heightUrlET"
+        android:padding="@dimen/padding"/>
+
+      <ImageButton
+        android:id="@+id/actionPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/videoUrlET"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/videoUrlET"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/margin"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/padding"
+        android:src="@android:drawable/ic_media_play"
+        android:tint="@color/colorAccent"/>
+
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
       android:id="@+id/commentsRV"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@id/videoUrlET"
+      android:layout_below="@id/urlRL"
       android:background="@android:color/white"/>
 
 
