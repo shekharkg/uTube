@@ -16,6 +16,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     homeBinding.actionPlay.setOnClickListener(this);
 
     homeBinding.videoUrlET.addTextChangedListener(urlTextWatcher);
+    homeBinding.videoUrlET.setOnTouchListener(etDrawableTouchListener);
   }
 
 
@@ -187,15 +189,35 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
       if (url.isEmpty()) {
         homeBinding.actionPlay.setColorFilter(Color.LTGRAY);
         homeBinding.actionPlay.setClickable(false);
+        homeBinding.videoUrlET.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_content_paste, 0);
       } else {
         homeBinding.actionPlay.setColorFilter(getResources().getColor(R.color.colorAccent));
         homeBinding.actionPlay.setClickable(true);
+        homeBinding.videoUrlET.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_clear, 0);
       }
     }
 
     @Override
     public void afterTextChanged(Editable editable) {
 
+    }
+  };
+
+  private View.OnTouchListener etDrawableTouchListener = new View.OnTouchListener() {
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+      if (event.getAction() == MotionEvent.ACTION_UP) {
+        if (event.getRawX() >= (homeBinding.videoUrlET.getRight() - homeBinding.videoUrlET.getCompoundDrawables()[2].getBounds().width())) {
+          if (homeBinding.videoUrlET.getText().toString().isEmpty())
+            homeBinding.videoUrlET.setText(defaultUrl);
+          else
+            homeBinding.videoUrlET.setText("");
+
+          return true;
+        }
+      }
+      return false;
     }
   };
 }
