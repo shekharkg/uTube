@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c)  2017 Shekhar Gupta. - All Rights Reserved
+  -->
+
+<resources>
+  <dimen name="status_bar_height">24dp</dimen>
+  <dimen name="margin_16">16dp</dimen>
+  <dimen name="dimen_8">8dp</dimen>
+  <dimen name="margin_32">32dp</dimen>
+</resources>
