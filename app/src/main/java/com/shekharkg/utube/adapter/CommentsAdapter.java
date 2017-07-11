@@ -29,14 +29,25 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsViewHolder> im
     this.videoItems = videoItems;
   }
 
+  public void addVideoItem(VideoItem item) {
+    videoItems.add(item);
+  }
+
+  public void updateList(List<VideoItem> videoItems) {
+    this.videoItems.clear();
+    for (VideoItem item : videoItems)
+      this.videoItems.add(item);
+  }
+
   @Override
   public CommentsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return new CommentsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_item, parent, false), this);
+    return new CommentsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_item, parent, false));
   }
 
   @Override
   public void onBindViewHolder(CommentsViewHolder holder, int position) {
-
+    holder.setListener(this);
+    holder.commentItemBinding.setItem(videoItems.get(position));
   }
 
   @Override
