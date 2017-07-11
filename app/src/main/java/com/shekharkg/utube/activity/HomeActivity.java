@@ -35,6 +35,7 @@ import com.shekharkg.utube.databinding.ActivityHomeBinding;
 import com.shekharkg.utube.interfaces.VideoItemClickedListener;
 import com.shekharkg.utube.logger.Logger;
 import com.shekharkg.utube.storage.StorageHelper;
+import com.shekharkg.utube.widget.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -74,6 +75,8 @@ public class HomeActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     adapter = new CommentsAdapter(storageHelper.getComments(videoId));
     LinearLayoutManager layoutManager = new LinearLayoutManager(this);
     homeBinding.commentsRV.setLayoutManager(layoutManager);
+    homeBinding.commentsRV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+
     homeBinding.commentsRV.setAdapter(adapter);
     adapter.setOnClickListener(this);
     homeBinding.actionPlay.setOnClickListener(this);
